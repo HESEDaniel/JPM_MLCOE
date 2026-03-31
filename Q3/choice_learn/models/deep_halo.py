@@ -125,12 +125,7 @@ class FeaturelessDeepHalo(ChoiceModel):
         # Output projection: (batch, J') @ (J', J) -> (batch, J)
         utilities = tf.matmul(y, self._trainable_weights[-1])
 
-        # Mask unavailable items to -inf for proper softmax normalization
-        return tf.where(
-            tf.cast(available_items_by_choice, tf.bool),
-            utilities,
-            tf.float32.min,
-        )
+        return utilities
 
     def fit(self, choice_dataset, **kwargs):
         """Fit the model, auto-instantiating if needed."""
@@ -178,8 +173,51 @@ class DeepHaloLayer(tf.keras.layers.Layer):
         self.phi_fc2.build((None, d))
         self.phi_norm.build((None, None, d))
 
+    def compute_residual(self, context_z, z_base, available_mask):
+        """Compute only the residual (Z_bar * phi) without adding to z_prev.
+
+        Parameters
+        ----------
+        context_z : tf.Tensor
+            Embeddings used for context summary Z_bar. Shape (batch, n_items, d).
+            For h0=0 architecture: z_base at layer 1, h^{l-1} at layer l>=2.
+        z_base : tf.Tensor
+            Base embeddings for phi transform. Shape (batch, n_items, d).
+        available_mask : tf.Tensor
+            Availability mask of shape (batch, n_items).
+
+        Returns
+        -------
+        tf.Tensor
+            Residual of shape (batch, n_items, d).
+        """
+        batch_size = tf.shape(z_base)[0]
+        n_items = tf.shape(z_base)[1]
+        d, H = self.embedding_dim, self.n_heads
+
+        mask = tf.expand_dims(tf.cast(available_mask, tf.float32), axis=-1)
+
+        # Context summary from context_z (not z_prev)
+        z_projected = tf.einsum("bid,dh->bih", context_z, self.W) * mask
+        n_available = tf.reduce_sum(mask, axis=1)
+        z_bar = tf.reduce_sum(z_projected, axis=1) / n_available
+
+        # phi from z_base (always)
+        phi = self.phi_fc1(z_base)
+        phi = tf.reshape(phi, [batch_size, n_items, H, d])
+        phi = self.phi_fc2(phi)
+        phi = self.phi_norm(phi)
+        phi = phi * tf.expand_dims(mask, axis=2)
+
+        # Z_bar * phi
+        z_bar_expanded = tf.reshape(z_bar, [batch_size, 1, H, 1])
+        residuals = phi * z_bar_expanded
+        residuals_avg = tf.reduce_sum(residuals, axis=2) / H
+
+        return residuals_avg * mask
+
     def call(self, z_prev, z_base, available_mask):
-        """Forward pass of DeepHalo layer.
+        """Forward pass: z_new = z_prev + residual(z_prev, z_base).
 
         Parameters
         ----------
@@ -195,35 +233,8 @@ class DeepHaloLayer(tf.keras.layers.Layer):
         tf.Tensor
             Updated embeddings of shape (batch, n_items, d).
         """
-        batch_size = tf.shape(z_base)[0]
-        n_items = tf.shape(z_base)[1]
-        d, H = self.embedding_dim, self.n_heads
-
-        # Mask: (batch, n_items, 1)
         mask = tf.expand_dims(tf.cast(available_mask, tf.float32), axis=-1)
-
-        # Context summary: Z_bar = mean(W @ z_prev) over available items
-        z_projected = tf.einsum("bid,dh->bih", z_prev, self.W) * mask
-        n_available = tf.reduce_sum(mask, axis=1)
-        z_bar = tf.reduce_sum(z_projected, axis=1) / n_available  # (batch, H)
-
-        # phi transformation
-        phi = self.phi_fc1(z_base)                              # (batch, n_items, d*H)
-        phi = tf.reshape(phi, [batch_size, n_items, H, d])      # (batch, n_items, H, d)
-        phi = self.phi_fc2(phi)                                 # (batch, n_items, H, d)
-        phi = self.phi_norm(phi)                                # (batch, n_items, H, d)
-        phi = phi * tf.expand_dims(mask, axis=2)                # Mask unavailable
-
-        # Gating: Z_bar_h * phi_h, sum over heads
-        z_bar_expanded = tf.reshape(z_bar, [batch_size, 1, H, 1])
-        residuals = phi * z_bar_expanded
-        residuals_avg = tf.reduce_sum(residuals, axis=2) / H
-
-        # Residual and mask
-        z_new = z_prev + residuals_avg
-        z_new = z_new * mask
-
-        return z_new
+        return (z_prev + self.compute_residual(z_prev, z_base, available_mask)) * mask
 
 
 class FeatureBasedDeepHalo(ChoiceModel):

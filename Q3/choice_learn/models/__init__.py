@@ -6,6 +6,8 @@ import tensorflow as tf
 
 from .conditional_logit import ConditionalLogit
 from .deep_halo import FeaturelessDeepHalo, FeatureBasedDeepHalo
+from .lu25_bayesian import Lu25Model
+from .deep_halo_combined import BayesianDeepHalo
 from .learning_mnl import LearningMNL
 from .nested_logit import NestedLogit
 from .reslogit import ResLogit
@@ -30,4 +32,6 @@ __all__ = [
     "NestedLogit",
     "ResLogit",
     "LearningMNL",
+    "Lu25Model",
+    "BayesianDeepHalo",
 ]
