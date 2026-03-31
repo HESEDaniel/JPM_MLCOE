@@ -5,7 +5,7 @@ import pytest
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-from choice_learn.models.lu25_bayesian import (
+from models.lu25_bayesian import (
     Lu25KernelResults,
     Lu25MCMCKernel,
     Lu25Model,

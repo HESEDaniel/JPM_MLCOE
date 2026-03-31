@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from choice_learn.models.bayesian_base_model import BayesianChoiceModel
+from models.bayesian_base_model import BayesianChoiceModel
 
 
 # --- Minimal concrete subclass for testing ---

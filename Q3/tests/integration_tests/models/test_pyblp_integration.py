@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from choice_learn.datasets.dgp import simulate_lu25_dgp
-from choice_learn.models.pyblp import PyBLPEstimator
+from datasets.dgp import simulate_lu25_dgp
+from models.pyblp import PyBLPEstimator
 
 
 # Fixtures

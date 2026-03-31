@@ -1,6 +1,6 @@
-# JPM MLCOE Time Series & Reinforcement Learning Internship (Part 1)
+# JPM MLCOE Time Series & Reinforcement Learning Internship
 
-This repository contains the implementation of Question 2 and 3 for Part 1.
+This repository contains the implementation of Questions 2 and 3.
 
 - Q2: Particle Flow Filter and Differentiable Particle Filter
 - Q3: Discrete Choice Model and Credit Card Offers

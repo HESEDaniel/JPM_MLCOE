@@ -15,7 +15,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-from choice_learn.datasets.dgp import simulate_lu25_dgp  # noqa: F401
+from datasets.dgp import simulate_lu25_dgp  # noqa: F401
 
 from .bayesian_base_model import BayesianChoiceModel
 

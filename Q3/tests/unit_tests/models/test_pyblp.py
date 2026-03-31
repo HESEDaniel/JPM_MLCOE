@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from choice_learn.models.pyblp import PyBLPEstimator
+from models.pyblp import PyBLPEstimator
 
 
 # Fixtures

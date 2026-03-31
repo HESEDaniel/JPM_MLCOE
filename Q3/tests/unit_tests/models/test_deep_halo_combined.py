@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-from choice_learn.models.deep_halo_combined import (
+from models.deep_halo_combined import (
     BayesianDeepHalo,
     ShockKernelResults,
     SparseDemandShockKernel,

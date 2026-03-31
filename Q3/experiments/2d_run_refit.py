@@ -36,9 +36,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import tensorflow as tf
 
-from choice_learn.datasets.dgp import simulate_deephalo_shrinkage_dgp
-from choice_learn.models.deep_halo_combined import BayesianDeepHalo, _logit_shares
-from choice_learn.models.lu25_bayesian import Lu25Model
+from datasets.dgp import simulate_deephalo_shrinkage_dgp
+from models.deep_halo_combined import BayesianDeepHalo, _logit_shares
+from models.lu25_bayesian import Lu25Model
 
 
 RESULTS_DIR = Path(__file__).parent / "results" / "2d_refit"

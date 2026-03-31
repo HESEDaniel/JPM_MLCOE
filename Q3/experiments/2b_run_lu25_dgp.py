@@ -26,8 +26,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from choice_learn.models.lu25_bayesian import Lu25Model
-from choice_learn.datasets.dgp import simulate_lu25_dgp
+from models.lu25_bayesian import Lu25Model
+from datasets.dgp import simulate_lu25_dgp
 
 RESULTS_DIR = Path(__file__).parent / "results" / "lu25"
 

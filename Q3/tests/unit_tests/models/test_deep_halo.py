@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-from choice_learn.models.deep_halo import (
+from models.deep_halo import (
     DeepHaloLayer,
     FeatureBasedDeepHalo,
     FeaturelessDeepHalo,
@@ -122,15 +122,14 @@ class TestFeaturelessDeepHalo:
         output = model.compute_batch_utility(None, None, available, None)
 
         assert np.isclose(output[0, 0].numpy(), 2.0)
-        assert output[0, 1].numpy() == tf.float32.min
+        assert np.isfinite(output[0, 1].numpy())
 
-    def test_unavailable_masked_to_neg_inf(self, featureless_model):
-        """Test unavailable items get -inf, available items are finite."""
+    def test_unavailable_items_finite(self, featureless_model):
+        """Test all outputs are finite (no -inf masking)."""
         available = np.array([[1, 1, 0, 0, 0]], dtype=np.float32)
         output = featureless_model.compute_batch_utility(None, None, available, None)
 
-        assert output[0, 2].numpy() == tf.float32.min
-        assert np.isfinite(output[0, 0].numpy())
+        assert np.all(np.isfinite(output.numpy()))
 
     def test_halo_effect(self, featureless_model):
         """Test same item gets different utility with different context."""

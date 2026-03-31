@@ -6,7 +6,7 @@ import tensorflow as tf
 
 from choice_learn.data import ChoiceDataset
 from choice_learn.datasets.base import load_heating
-from choice_learn.models.deep_halo import FeatureBasedDeepHalo, FeaturelessDeepHalo
+from models.deep_halo import FeatureBasedDeepHalo, FeaturelessDeepHalo
 
 
 # Fixtures

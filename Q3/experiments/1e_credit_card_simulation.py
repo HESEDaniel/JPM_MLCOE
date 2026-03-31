@@ -15,7 +15,8 @@ import tensorflow as tf
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from choice_learn.data import ChoiceDataset
-from choice_learn.models import FeatureBasedDeepHalo, SimpleMNL
+from models import FeatureBasedDeepHalo
+from choice_learn.models import SimpleMNL
 from choice_learn.models.halo_mnl import HaloMNL
 
 from utils.utils import set_seeds, setup_gpu, measure_time, get_config_hash

@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from choice_learn.datasets.dgp import simulate_deephalo_shrinkage_dgp
-from choice_learn.models.deep_halo_combined import BayesianDeepHalo
+from datasets.dgp import simulate_deephalo_shrinkage_dgp
+from models.deep_halo_combined import BayesianDeepHalo
 
 
 # Fixtures

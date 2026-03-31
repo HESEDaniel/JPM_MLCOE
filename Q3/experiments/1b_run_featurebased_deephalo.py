@@ -18,7 +18,7 @@ import tensorflow as tf
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from choice_learn.data import ChoiceDataset
 from choice_learn.datasets.base import load_heating
-from choice_learn.models import FeatureBasedDeepHalo
+from models import FeatureBasedDeepHalo
 
 from utils.utils import (
     setup_gpu, get_config_hash, load_experiment_log, save_experiment_log

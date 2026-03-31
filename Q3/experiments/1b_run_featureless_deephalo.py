@@ -19,7 +19,7 @@ import tensorflow as tf
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from choice_learn.data import ChoiceDataset
-from choice_learn.models import FeaturelessDeepHalo
+from models import FeaturelessDeepHalo
 
 from utils.utils import (
     setup_gpu, get_config_hash, load_experiment_log, save_experiment_log
