@@ -6,6 +6,7 @@ This repository contains the implementation of Questions 2 and 3.
 - Q3: Discrete Choice Model and Credit Card Offers
 
 ~~The Q3 implementation is designed to be plug-and-play with the `choice-learn` library.~~
+
 Q3 implementation now supports poetry!
 
 ## Project Structure
